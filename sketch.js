@@ -1,24 +1,38 @@
+//name spacing
 const Engine = Matter.Engine;
 const World= Matter.World;
 const Bodies= Matter.Bodies;
 const Constraint= Matter.Constraint
 
 var engine,world;
-var polygon;
+var polygon, polygonImg;
+
+function preload(){
+  //loading the image for the polygon
+  polygonImg= loadImage("polygon.png");
+}
 
 function setup() {
   createCanvas(1200,600);
+  
+  //Physics Engine
   engine= Engine.create();
   world= engine.world;
+  Engine.run(engine);
+
+  //ground and the stands
+  mainGround= new Ground(600,590,width,"chocolate")
+  stand= new Ground(480,400,300,"darkSlateGray");
+  stand2= new Ground(875,300,230,"darkSlateGray")
 
   //first pyramid
-  box1= new Block(420,399,"cyan");
-  box2= new Block(450,399,"cyan");
-  box3= new Block(480,399,"cyan");
-  box4= new Block(510,399,"cyan");
-  box5= new Block(540,399,"cyan")
+  box1= new Block(420,390,"cyan");
+  box2= new Block(450,390,"cyan");
+  box3= new Block(480,390,"cyan");
+  box4= new Block(510,390,"cyan");
+  box5= new Block(530,390,"cyan")
 
-  box6= new Block(430,369,"pink");
+  box6= new Block(430,360,"pink");
   box7= new Block(460,369,"pink");
   box8= new Block(490,369,"pink");
   box9= new Block(520,369,"pink");
@@ -27,40 +41,47 @@ function setup() {
   box11= new Block(475,339,"tomato");
   box12= new Block(505,339,"tomato");
 
-  box13= new Block(470,309,"olive"); 
-  box14= new Block(485,309,"olive");
+  box13= new Block(470,309,"greenYellow"); 
+  box14= new Block(485,309,"greenYellow");
 
   box15= new Block(480,279,"purple");
 
   //second 
-  box16= new Block(830,299,"purple");
-  box17= new Block(860,299,"purple");
-  box18= new Block(890,299,"purple");
-  box19= new Block(920,299,"purple");
+  box16= new Block(830,290,"purple");
+  box17= new Block(860,290,"purple");
+  box18= new Block(890,290,"purple");
+  box19= new Block(920,290,"purple");
   
-  box20= new Block(845,269,"olive");
-  box21= new Block(875,269,"olive");
-  box22= new Block(905,269,"olive");
+  box20= new Block(845,269,"greenYellow");
+  box21= new Block(875,269,"greenYellow");
+  box22= new Block(905,269,"greenYellow");
 
   box23=new Block(855,239,"tomato");
   box24=new Block(885,239,"tomato");
 
   box25= new Block(870,209,"pink");
 
-  polygon= Bodies.polygon(200,300,6,10);
-  polygon.shapeColor="red";
+  //polygon and the launcher
+  polygon= Bodies.polygon(200,300,6,20,{density:0.003});
   World.add(world,polygon)
-
   
+  launcher= new Launcher(this.polygon,{x:200,y:200});
+
  
-  mainGround= new Ground(600,590,width,"chocolate")
-  ground= new Ground(480,400,300,"white");
-  ground2= new Ground(875,300,230,"white")
+  
 }
 
 function draw() {
-  background(0);  
-  Engine.update(engine);
+  background("oliveDrab");  
+  //Engine.update(engine);
+
+  //text
+  textFont("times");
+  textSize(50);
+  fill(0)
+  text("Tower Siege",450,100)
+
+  //display
   box1.display();
   box2.display();
   box3.display();
@@ -86,11 +107,23 @@ function draw() {
   box23.display();
   box24.display();
   box25.display(); 
-
-  
-  
   mainGround.display();
-  ground.display(); 
-  ground2.display();
+  stand.display(); 
+  stand2.display();
+  launcher.display();
+
+  //image
+  imageMode(CENTER);
+  image(polygonImg,polygon.position.x,polygon.position.y,50,50);
+
   drawSprites();
+}
+
+// mouseDragged event
+function mouseDragged(){
+    Matter.Body.setPosition(this.polygon,{x:mouseX,y:mouseY})
+}
+// mouseReleased event
+function mouseReleased(){
+  launcher.fly();
 }
