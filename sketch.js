@@ -62,7 +62,7 @@ function setup() {
   box25= new Block(870,209,"pink");
 
   //polygon and the launcher
-  polygon= Bodies.polygon(200,300,6,20,{density:0.003});
+  polygon= Bodies.polygon(200,300,6,20,{density:0.0045});
   World.add(world,polygon)
   
   launcher= new Launcher(this.polygon,{x:200,y:200});
